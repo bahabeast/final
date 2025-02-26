@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mathematics Student Tasks - Educational Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        html, body { font-size: 16px; font-family: 'Open Sans', sans-serif; background-color: #f8f9fa; margin: 0; padding: 0; min-height: 100vh; line-height: 1.4 }
+        .navbar { position: fixed; top: 0; width: 100%; z-index: 1000; background-color: #4a4a4a; border-bottom: 1px solid #3c3c3c; height: 56px }
+        .navbar-brand { font-family: 'Open Sans', sans-serif; margin-left: 80px; color: #ffffff; font-size: 16px; font-weight: 600; line-height: 56px }
+        .navbar-nav .nav-link { font-family: 'Open Sans', sans-serif; text-transform: uppercase; letter-spacing: 2px; font-size: 16px; color: #ffffff; padding: 10px 15px; line-height: 36px }
+        .navbar-nav .nav-link:hover { color: #007bff }
+        .btn-outline-success { border-color: #28a745; color: #28a745; font-size: 14px; padding: 6px 12px }
+        .btn-outline-success:hover { background-color: #28a745; color: #ffffff }
+        main { display: grid; grid-template-columns: 1fr 3fr; gap: 20px; padding: 20px; margin-top: 56px; min-height: calc(100vh - 56px) }
+        .subjects-box, .task-content-box { background-color: #ffffff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border: 1px solid #e9ecef; height: 100%; display: flex; flex-direction: column }
+        .subjects-box { justify-content: flex-start }
+        .list-group-item { padding: 10px 15px; font-size: 14px; color: #333333; border-bottom: 1px solid #e9ecef; transition: background-color 0.2s }
+        .list-group-item:hover { background-color: #f1f1f1; color: #333333 }
+        .list-group-item.active { background-color: #007bff; color: #ffffff; border-color: #007bff }
+        .subjects-box .badge { font-size: 12px; padding: 4px 8px }
+        h4 { margin-bottom: 15px; text-align: center; color: #333333; font-size: 16px; font-weight: bold }
+        .task-table th, .task-table td { padding: 10px 15px; text-align: left; border-bottom: 1px solid #e9ecef; font-size: 14px; color: #333333 }
+        .task-table th { background-color: #f1f1f1; font-weight: 600 }
+        .task-table td { color: #666666 }
+        .view-btn { font-size: 12px; padding: 6px 12px; background-color: #007bff; color: #ffffff; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.2s }
+        .view-btn:hover { background-color: #0056b3 }
+        .notification { margin-top: 10px; display: none }
+        .alert-success { background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; border: 1px solid #c3e6cb }
+        .alert-danger { background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; border: 1px solid #f5c6cb }
+        @media (max-width: 768px) { main { grid-template-columns: 1fr; gap: 10px; padding: 10px } .subjects-box, .task-content-box { padding: 10px } h4 { font-size: 14px } .list-group-item { padding: 8px 12px; font-size: 12px } .task-table th, .task-table td { padding: 8px 12px; font-size: 12px } .view-btn { font-size: 10px; padding: 4px 10px } .navbar-brand { margin-left: 20px; font-size: 16px } .navbar-nav .nav-link { font-size: 14px; padding: 8px 12px } .btn-outline-success { font-size: 12px; padding: 4px 10px } }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="index.html">Educational Platform</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="calendar.html">Calendar</a></li>
+                <li class="nav-item"><a class="nav-link" href="forums.html">Forums</a></li>
+            </ul>
+            <form class="d-flex">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+            <ul class="navbar-nav ms-3">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="userName"></a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="profile.html">Profile</a></li>
+                        <li><a class="dropdown-item" href="grades.html">Grades</a></li>
+                        <li><a class="dropdown-item" href="notifications.html">Notifications</a></li>
+                        <li><a class="dropdown-item" href="login.html">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main>
+    <div class="subjects-box">
+        <h4>University Subjects</h4>
+        <ul class="list-group">
+            <a href="teacherviewstudenttask.html" class="list-group-item list-group-item-action d-flex align-items-center active">
+                <i class="bi bi-book me-2"></i> Mathematics <span class="badge bg-primary rounded-pill ms-2">3</span>
+            </a>
+            <a href="teacher-computer-science-student-tasks.html" class="list-group-item list-group-item-action d-flex align-items-center">
+                <i class="bi bi-book me-2"></i> Computer Science <span class="badge bg-primary rounded-pill ms-2">2</span>
+            </a>
+        </ul>
+    </div>
+
+    <div class="task-content-box">
+        <h4>Mathematics Student Tasks</h4>
+        <div class="task-selection">
+            <div class="form-group">
+                <label for="groupSelect">Select Group</label>
+                <select id="groupSelect" aria-label="Select student group" onchange="updateTasks()">
+                    <option value="group1">Group 1</option>
+                    <option value="group2">Group 2</option>
+                    <option value="group3">Group 3</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="studentSelect">Select Student</label>
+                <select id="studentSelect" aria-label="Select student" onchange="updateTasks()">
+                    <option value="">Select a student</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="weekSelect">Select Week</label>
+                <select id="weekSelect" aria-label="Select week" onchange="updateTasks()">
+                    <option value="1">Week 1</option>
+                    <option value="2">Week 2</option>
+                    <option value="3">Week 3</option>
+                </select>
+            </div>
+        </div>
+        <table class="task-table" id="taskTable">
+            <thead><tr><th>Task Title</th><th>Status</th><th>Grade</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+        </table>
+        <div class="notification" id="notification"></div>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function fetchUserName() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = 'login.html';
+            return;
+        }
+        fetch('http://localhost:3000/api/users?role=teacher', {
+            headers: { 'x-auth-token': token }
+        })
+        .then(response => response.json())
+        .then(users => {
+            if (users.length > 0) document.getElementById('userName').textContent = `${users[0].firstName} ${users[0].surname}`;
+        }).catch(error => {
+            console.error('Error fetching user name:', error);
+            window.location.href = 'login.html';
+        });
+    }
+    document.addEventListener('DOMContentLoaded', fetchUserName);
+
+    function updateTasks() {
+        const subject = 'mathematics';
+        const group = document.getElementById('groupSelect').value;
+        const student = document.getElementById('studentSelect').value;
+        const week = document.getElementById('weekSelect').value;
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        if (student) {
+            fetch(`http://localhost:3000/api/teacher/${subject}/student-tasks?group=${group}&student=${student}&week=${week}`, {
+                headers: { 'x-auth-token': token }
+            })
+            .then(response => response.json())
+            .then(tasks => {
+                const tbody = document.getElementById('taskTable').querySelector('tbody');
+                tbody.innerHTML = tasks.map(task => `
+                    <tr><td>${task.title}</td><td>${task.status}</td><td>${task.grade || 'Not graded'}</td><td><button class="view-btn" onclick="viewTask('${task.id}')">View</button></td></tr>
+                `).join('');
+            }).catch(error => showNotification('Error fetching tasks.', 'danger'));
+        } else {
+            document.getElementById('taskTable').querySelector('tbody').innerHTML = '';
+            showNotification('Please select a student.', 'danger');
+        }
+    }
+
+    function viewTask(taskId) {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = 'login.html';
+            return;
+        }
+        fetch(`http://localhost:3000/api/teacher/mathematics/tasks/${taskId}`, {
+            headers: { 'x-auth-token': token }
+        })
+        .then(response => response.json())
+        .then(task => {
+            alert(`Task Details:\nTitle: ${task.title}\nStatus: ${task.status}\nGrade: ${task.grade || 'Not graded'}\nDescription: ${task.description}`);
+            if (task.file) window.open(task.file, '_blank');
+        }).catch(error => showNotification('Error viewing task.', 'danger'));
+    }
+
+    function updateStudentSelect() {
+        const group = document.getElementById('groupSelect').value;
+        const studentSelect = document.getElementById('studentSelect');
+        studentSelect.innerHTML = '<option value="">Select a student</option>';
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        fetch(`http://localhost:3000/api/teacher/mathematics/students?group=${group}`, {
+            headers: { 'x-auth-token': token }
+        })
+        .then(response => response.json())
+        .then(students => {
+            students.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student;
+                option.textContent = student;
+                studentSelect.appendChild(option);
+            });
+        }).catch(error => showNotification('Error fetching students.', 'danger'));
+    }
+
+    function showNotification(message, type) {
+        const notification = document.getElementById('notification');
+        notification.innerHTML = `<div class="alert-${type}">${message}</div>`;
+        notification.style.display = 'block';
+        setTimeout(() => notification.style.display = 'none', 3000);
+    }
+
+    // Initialize with default group
+    document.addEventListener('DOMContentLoaded', () => {
+        updateStudentSelect();
+        updateTasks();
+    });
+</script>
+</body>
+</html>

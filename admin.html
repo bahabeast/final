@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Dashboard - Educational Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding-top: 70px;
+        }
+
+        .nav-box {
+            position: fixed;
+            left: 0;
+            top: 56px;
+            width: 250px;
+            height: 100%;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+
+        .admin-content-box {
+            margin-left: 270px;
+            padding: 20px;
+        }
+
+        .section {
+            display: none;
+        }
+
+            .section.active {
+                display: block;
+            }
+
+        .add-btn, .delete-btn {
+            padding: 8px 16px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .add-btn {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+            .add-btn:hover {
+                background-color: #0056b3;
+            }
+
+        .delete-btn {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+            .delete-btn:hover {
+                background-color: #b02a37;
+            }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+            .form-group label, .form-group input, .form-group select {
+                font-size: 14px;
+                width: 100%;
+                padding: 8px;
+                border: 1px solid #e9ecef;
+                border-radius: 5px;
+                box-sizing: border-box;
+            }
+
+        .notification {
+            margin-top: 10px;
+            display: none;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .table {
+            width: 100%;
+            margin-top: 15px;
+        }
+
+            .table th, .table td {
+                padding: 10px;
+                text-align: left;
+                border-bottom: 1px solid #e9ecef;
+            }
+
+        .assign-org-btn {
+            background-color: #28a745;
+            color: #fff;
+            padding: 6px 12px;
+        }
+
+            .assign-org-btn:hover {
+                background-color: #218838;
+            }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="admin.html">Educational Platform</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="admin.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="calendar.html">Calendar</a></li>
+                    <li class="nav-item"><a class="nav-link" href="forums.html">Forums</a></li>
+                </ul>
+                <form class="d-flex">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+                <ul class="navbar-nav ms-3">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="adminUserName" role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="admin.html">Admin Dashboard</a></li>
+                            <li><a class="dropdown-item" href="adminlogin.html" onclick="logout()">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="nav-box">
+            <h4>Admin Sections</h4>
+            <ul class="list-group">
+                <a href="#" class="list-group-item list-group-item-action d-flex align-items-center active" onclick="showSection('users')"><i class="bi bi-people me-2"></i> Users</a>
+                <a href="#" class="list-group-item list-group-item-action d-flex align-items-center" onclick="showSection('organizations')"><i class="bi bi-building me-2"></i> Organizations</a>
+                <a href="#" class="list-group-item list-group-item-action d-flex align-items-center" onclick="showSection('announcements')"><i class="bi bi-megaphone me-2"></i> Announcements</a>
+                <a href="#" class="list-group-item list-group-item-action d-flex align-items-center" onclick="showSection('statistics')"><i class="bi bi-bar-chart me-2"></i> Statistics</a>
+                <a href="#" class="list-group-item list-group-item-action d-flex align-items-center" onclick="showSection('subjects')"><i class="bi bi-book me-2"></i> Subjects</a>
+            </ul>
+        </div>
+
+        <div class="admin-content-box">
+            <h4>Admin Dashboard</h4>
+            <div class="admin-content-form">
+                <div id="users" class="section active">
+                    <h5>Manage Students</h5>
+                    <table class="table" id="studentsTable">
+                        <thead><tr><th>Name</th><th>Email</th><th>Organization</th><th>Actions</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                    <h5 class="mt-4">Manage Teachers</h5>
+                    <table class="table" id="teachersTable">
+                        <thead><tr><th>Name</th><th>Email</th><th>Organizations</th><th>Actions</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div id="organizations" class="section">
+                    <h5>Manage Organizations</h5>
+                    <div class="form-group">
+                        <label for="orgName">Organization Name</label>
+                        <input type="text" id="orgName" placeholder="Enter organization name" aria-label="Enter organization name">
+                    </div>
+                    <button type="button" class="add-btn" onclick="createOrganization()">Create Organization</button>
+                    <table class="table" id="orgTable">
+                        <thead><tr><th>Name</th><th>Code</th><th>Members</th><th>Created</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div id="announcements" class="section">
+                    <h5>Manage Announcements</h5>
+                    <p>Announcements management to be implemented.</p>
+                </div>
+                <div id="statistics" class="section">
+                    <h5>View Statistics</h5>
+                    <p>Statistics to be implemented.</p>
+                </div>
+                <div id="subjects" class="section">
+                    <h5>Manage Subjects</h5>
+                    <div class="form-group">
+                        <label for="subjectName">Subject Name</label>
+                        <input type="text" id="subjectName" placeholder="Enter subject name" aria-label="Enter subject name">
+                    </div>
+                    <div class="form-group">
+                        <label for="teacherSelect">Assign to Teacher</label>
+                        <select id="teacherSelect" aria-label="Select teacher">
+                            <option value="">No Teacher</option>
+                        </select>
+                    </div>
+                    <button type="button" class="add-btn" onclick="addSubject()">Add Subject</button>
+                    <table class="table" id="subjectsTable">
+                        <thead><tr><th>Name</th><th>Teacher</th><th>Created</th><th>Actions</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="notification" id="notification"></div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_BASE_URL = 'http://localhost:3000';
+
+        async function fetchAdminName() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'adminlogin.html';
+                return;
+            }
+            const response = await fetch(`${API_BASE_URL}/api/admin`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!response.ok) {
+                localStorage.removeItem('token');
+                window.location.href = 'adminlogin.html';
+                return;
+            }
+            const data = await response.json();
+            document.getElementById('adminUserName').textContent = data.admin.username;
+        }
+
+        function showSection(section) {
+            document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+            document.getElementById(section).style.display = 'block';
+            document.querySelectorAll('.list-group-item').forEach(item => item.classList.remove('active'));
+            document.querySelector(`.list-group-item[onclick="showSection('${section}')"]`).classList.add('active');
+            if (section === 'users') fetchUsers();
+            if (section === 'organizations') fetchOrganizations();
+            if (section === 'subjects') fetchSubjects();
+        }
+
+        async function fetchUsers() {
+            const token = localStorage.getItem('token');
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/users`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const users = await response.json();
+
+                // Students table
+                const studentsTbody = document.querySelector('#studentsTable tbody');
+                studentsTbody.innerHTML = '';
+                users.filter(user => user.role === 'student').forEach(user => {
+                    const orgName = user.organizations.length > 0 ? user.organizations[0].name : 'None';
+                    const row = `<tr>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td>${orgName}</td>
+                        <td><button class="delete-btn" onclick="removeUser('${user._id}')">Delete</button></td>
+                    </tr>`;
+                    studentsTbody.innerHTML += row;
+                });
+
+                // Teachers table
+                const teachersTbody = document.querySelector('#teachersTable tbody');
+                teachersTbody.innerHTML = '';
+                users.filter(user => user.role === 'teacher').forEach(user => {
+                    const orgNames = user.organizations.length > 0 ? user.organizations.map(org => org.name).join(', ') : 'None';
+                    const row = `<tr>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td>${orgNames}</td>
+                        <td>
+                            <button class="delete-btn" onclick="removeUser('${user._id}')">Delete</button>
+                            <button class="assign-org-btn" onclick="assignTeacherToOrg('${user._id}')">Assign Org</button>
+                        </td>
+                    </tr>`;
+                    teachersTbody.innerHTML += row;
+                });
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        }
+
+        async function removeUser(userId) {
+            if (!confirm('Are you sure you want to delete this user?')) return;
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${API_BASE_URL}/api/users/${userId}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await response.json();
+            if (data.success) {
+                showNotification('User removed!', 'success');
+                fetchUsers();
+            } else {
+                showNotification(data.message, 'danger');
+            }
+        }
+
+        async function assignTeacherToOrg(teacherId) {
+            const token = localStorage.getItem('token');
+            const orgsResponse = await fetch(`${API_BASE_URL}/api/organizations`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const organizations = await orgsResponse.json();
+
+            const orgName = prompt('Enter the organization name to assign:\nAvailable organizations:\n' + organizations.map(org => org.name).join('\n'));
+            if (!orgName) return;
+
+            const response = await fetch(`${API_BASE_URL}/api/users/${teacherId}/organizations`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ organizationName: orgName })
+            });
+            const data = await response.json();
+            if (data.success) {
+                showNotification('Teacher assigned to organization!', 'success');
+                fetchUsers();
+            } else {
+                showNotification(data.message, 'danger');
+            }
+        }
+
+        async function fetchOrganizations() {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${API_BASE_URL}/api/organizations`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const orgs = await response.json();
+            const tbody = document.querySelector('#orgTable tbody');
+            tbody.innerHTML = '';
+            orgs.forEach(org => {
+                const row = `<tr>
+                    <td>${org.name}</td>
+                    <td>${org.code}</td>
+                    <td>${org.memberCount}</td>
+                    <td>${new Date(org.createdAt).toLocaleDateString()}</td>
+                </tr>`;
+                tbody.innerHTML += row;
+            });
+        }
+
+        async function createOrganization() {
+            const name = document.getElementById('orgName').value;
+            if (!name) {
+                showNotification('Please enter an organization name.', 'danger');
+                return;
+            }
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${API_BASE_URL}/api/organizations`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ name })
+            });
+            const data = await response.json();
+            if (data.success) {
+                showNotification(`Organization created! Code: ${data.code}`, 'success');
+                fetchOrganizations();
+                document.getElementById('orgName').value = '';
+            } else {
+                showNotification(data.message, 'danger');
+            }
+        }
+
+        async function fetchSubjects() {
+            const token = localStorage.getItem('token');
+            try {
+                const [subjectsResponse, teachersResponse] = await Promise.all([
+                    fetch(`${API_BASE_URL}/api/subjects`, { headers: { 'Authorization': `Bearer ${token}` } }),
+                    fetch(`${API_BASE_URL}/api/users?role=teacher`, { headers: { 'Authorization': `Bearer ${token}` } })
+                ]);
+                const subjects = await subjectsResponse.json();
+                const teachers = await teachersResponse.json();
+
+                const teacherSelect = document.getElementById('teacherSelect');
+                teacherSelect.innerHTML = '<option value="">No Teacher</option>' +
+                    teachers.filter(t => t.role === 'teacher').map(teacher => `
+                        <option value="${teacher._id}">${teacher.name}</option>
+                    `).join('');
+
+                const tbody = document.querySelector('#subjectsTable tbody');
+                tbody.innerHTML = '';
+                subjects.forEach(subject => {
+                    const teacherName = subject.teacher ? subject.teacher.name : 'Unassigned';
+                    const row = `<tr>
+                        <td>${subject.name}</td>
+                        <td>${teacherName}</td>
+                        <td>${new Date(subject.createdAt).toLocaleDateString()}</td>
+                        <td><button class="delete-btn" onclick="removeSubject('${subject._id}')">Delete</button></td>
+                    </tr>`;
+                    tbody.innerHTML += row;
+                });
+            } catch (error) {
+                console.error('Error fetching subjects:', error);
+                showNotification('Error loading subjects', 'danger');
+            }
+        }
+
+        async function addSubject() {
+            const name = document.getElementById('subjectName').value;
+            const teacherId = document.getElementById('teacherSelect').value;
+            if (!name) {
+                showNotification('Please enter a subject name.', 'danger');
+                return;
+            }
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${API_BASE_URL}/api/subjects`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ name, teacherId: teacherId || null })
+            });
+            const data = await response.json();
+            if (data.success) {
+                showNotification('Subject added!', 'success');
+                fetchSubjects();
+                document.getElementById('subjectName').value = '';
+                document.getElementById('teacherSelect').value = '';
+            } else {
+                showNotification(data.message, 'danger');
+            }
+        }
+
+        async function removeSubject(subjectId) {
+            if (!confirm('Are you sure you want to delete this subject?')) return;
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${API_BASE_URL}/api/subjects/${subjectId}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await response.json();
+            if (data.success) {
+                showNotification('Subject removed!', 'success');
+                fetchSubjects();
+            } else {
+                showNotification(data.message, 'danger');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = 'adminlogin.html';
+        }
+
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.innerHTML = `<div class="alert-${type}">${message}</div>`;
+            notification.style.display = 'block';
+            setTimeout(() => notification.style.display = 'none', 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAdminName();
+            showSection('users');
+        });
+    </script>
+</body>
+</html>

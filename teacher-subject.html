@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Teacher Subject - Educational Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        html, body { font-size: 16px; font-family: 'Open Sans', sans-serif; background-color: #f8f9fa; margin: 0; padding: 0; min-height: 100vh; line-height: 1.4 }
+        .navbar { position: fixed; top: 0; width: 100%; z-index: 1000; background-color: #4a4a4a; border-bottom: 1px solid #3c3c3c; height: 56px }
+        .navbar-brand { font-family: 'Open Sans', sans-serif; margin-left: 80px; color: #ffffff; font-size: 16px; font-weight: 600; line-height: 56px }
+        .navbar-nav .nav-link { font-family: 'Open Sans', sans-serif; text-transform: uppercase; letter-spacing: 2px; font-size: 16px; color: #ffffff; padding: 10px 15px; line-height: 36px }
+        .navbar-nav .nav-link:hover { color: #007bff }
+        .btn-outline-success { border-color: #28a745; color: #28a745; font-size: 14px; padding: 6px 12px }
+        .btn-outline-success:hover { background-color: #28a745; color: #ffffff }
+        main { display: grid; grid-template-columns: 1fr 3fr; gap: 20px; padding: 20px; margin-top: 56px; min-height: calc(100vh - 56px) }
+        .subjects-box, .subject-content-box { background-color: #ffffff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border: 1px solid #e9ecef; height: 100%; display: flex; flex-direction: column }
+        .subjects-box { justify-content: flex-start }
+        .list-group-item { padding: 10px 15px; font-size: 14px; color: #333333; border-bottom: 1px solid #e9ecef; transition: background-color 0.2s }
+        .list-group-item:hover { background-color: #f1f1f1; color: #333333 }
+        .list-group-item.active { background-color: #007bff; color: #ffffff; border-color: #007bff }
+        .subjects-box .badge { font-size: 12px; padding: 4px 8px }
+        h4 { margin-bottom: 15px; text-align: center; color: #333333; font-size: 16px; font-weight: bold }
+        .week-container { margin-bottom: 15px; padding: 15px; background-color: #f8f9fa; border-radius: 5px; border: 1px solid #e9ecef }
+        .week-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px }
+        .week-title { color: #333333; font-size: 14px; font-weight: 600 }
+        .week-toggle { font-size: 12px; padding: 5px 10px; background-color: #007bff; color: #ffffff; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.2s }
+        .week-toggle:hover { background-color: #0056b3 }
+        .week-content { display: none }
+        .week-content.active { display: block }
+        .material-input label, .material-input input, .material-input textarea { font-size: 14px; color: #333333; width: 100%; padding: 8px; border: 1px solid #e9ecef; border-radius: 5px; box-sizing: border-box }
+        .add-btn, .save-btn { font-size: 12px; padding: 6px 12px; background-color: #007bff; color: #ffffff; border: none; border-radius: 5px; cursor: pointer; margin-top: 5px; transition: background-color 0.2s }
+        .add-btn:hover, .save-btn:hover { background-color: #0056b3 }
+        .tab-content { display: none }
+        .tab-content.active { display: block }
+        .nav-tabs { margin-bottom: 15px }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 2000 }
+        .modal-content { background-color: #fff; margin: 15% auto; padding: 20px; border-radius: 5px; width: 80%; max-width: 500px }
+        .modal.active { display: block }
+        @media (max-width: 768px) { main { grid-template-columns: 1fr; gap: 10px; padding: 10px } .subjects-box, .subject-content-box { padding: 10px } h4 { font-size: 14px } .list-group-item, .week-title, .material-input label, .material-input input, .material-input textarea, .add-btn, .save-btn, .week-toggle { font-size: 12px } .week-container { padding: 10px } .week-toggle { padding: 4px 8px } .navbar-brand { margin-left: 20px; font-size: 16px } .navbar-nav .nav-link { font-size: 14px; padding: 8px 12px } .btn-outline-success { font-size: 12px; padding: 4px 10px } }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="teacherindex.html">Educational Platform</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="teacherindex.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="calendar.html">Calendar</a></li>
+                <li class="nav-item"><a class="nav-link" href="forums.html">Forums</a></li>
+            </ul>
+            <form class="d-flex">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+            <ul class="navbar-nav ms-3">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userName" role="button" data-bs-toggle="dropdown" aria-expanded="false">Teacher</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="profile.html">Profile</a></li>
+                        <li><a class="dropdown-item" href="grades.html">Grades</a></li>
+                        <li><a class="dropdown-item" href="notifications.html">Notifications</a></li>
+                        <li><a class="dropdown-item" href="login.html" onclick="logout()">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main>
+    <div class="subjects-box">
+        <h4>Assigned Subjects</h4>
+        <ul class="list-group" id="subjectsList"></ul>
+    </div>
+
+    <div class="subject-content-box">
+        <h4 id="subjectTitle">Subject</h4>
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" href="#" data-tab="materials">Materials</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-tab="tasks">Tasks</a>
+            </li>
+        </ul>
+        <div id="materials" class="tab-content active">
+            <div id="materialsWeeks"></div>
+            <button class="add-btn" onclick="addWeek('materials')">Add Week</button>
+            <button class="save-btn" onclick="saveContent()">Save Changes</button>
+        </div>
+        <div id="tasks" class="tab-content">
+            <div class="form-group">
+                <label for="groupSelect">Select Group</label>
+                <select id="groupSelect" onchange="fetchTasks()"></select>
+            </div>
+            <div id="tasksWeeks"></div>
+            <button class="add-btn" onclick="addWeek('tasks')">Add Week</button>
+            <button class="save-btn" onclick="saveContent()">Save Changes</button>
+        </div>
+    </div>
+</main>
+
+<div id="addContentModal" class="modal">
+    <div class="modal-content">
+        <h5>Add Content</h5>
+        <div class="form-group">
+            <label for="modalType">Type</label>
+            <select id="modalType"></select>
+        </div>
+        <div class="form-group" id="modalOrgGroup" style="display: none;">
+            <label for="modalOrg">Group</label>
+            <select id="modalOrg"></select>
+        </div>
+        <div class="form-group">
+            <label for="modalTitle">Title</label>
+            <input type="text" id="modalTitle">
+        </div>
+        <div class="form-group" id="modalDueGroup" style="display: none;">
+            <label for="modalDue">Due Date</label>
+            <input type="datetime-local" id="modalDue">
+        </div>
+        <div class="form-group">
+            <label for="modalContent">Content</label>
+            <textarea id="modalContent"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="modalFile">Upload File</label>
+            <input type="file" id="modalFile" accept=".pdf,.jpg,.png">
+        </div>
+        <button class="add-btn" onclick="addContentFromModal()">Add</button>
+        <button class="save-btn" onclick="closeModal()">Cancel</button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const API_BASE_URL = 'http://localhost:3000';
+    let userOrganizations = [];
+    let subjectId = new URLSearchParams(window.location.search).get('id');
+    let weeks = { materials: [], tasks: [] };
+    let currentWeekNum = null;
+    let currentType = null;
+    let pendingFiles = [];
+
+    async function checkAuthAndFetchUser() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = 'login.html';
+            return;
+        }
+        if (!subjectId) {
+            alert('No subject ID provided. Please select a subject.');
+            window.location.href = 'teacherindex.html';
+            return;
+        }
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/me`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!response.ok) {
+                throw new Error('Invalid token');
+            }
+            const data = await response.json();
+            if (!data.success) {
+                throw new Error('User data not found');
+            }
+            if (data.user.role !== 'teacher') {
+                alert('Access restricted to teachers only');
+                window.location.href = 'index.html';
+                return;
+            }
+            userOrganizations = data.user.organizations.map(org => ({ id: org._id, name: org.name }));
+            document.getElementById('userName').textContent = data.user.name || 'Teacher';
+            await fetchSubjects();
+            await fetchContent();
+            attachToggleListeners();
+        } catch (error) {
+            console.error('Auth error:', error);
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem('token');
+        window.location.href = 'login.html';
+    }
+
+    async function fetchSubjects() {
+        const token = localStorage.getItem('token');
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/subjects`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const subjects = await response.json();
+            const teacherId = localStorage.getItem('token') ? jwt_decode(token).id : null;
+            const teacherSubjects = subjects.filter(subject => subject.teacher && subject.teacher._id === teacherId);
+            const list = document.getElementById('subjectsList');
+            list.innerHTML = teacherSubjects.length > 0 ? teacherSubjects.map(subject => `
+                <a href="teacher-subject.html?id=${subject._id}" class="list-group-item list-group-item-action d-flex align-items-center ${subject._id === subjectId ? 'active' : ''}">
+                    <i class="bi bi-book me-2"></i> ${subject.name} <span class="badge bg-primary rounded-pill ms-2">0</span>
+                </a>
+            `).join('') : '<li class="list-group-item">No subjects assigned</li>';
+            const currentSubject = subjects.find(s => s._id === subjectId);
+            document.getElementById('subjectTitle').textContent = currentSubject ? `${currentSubject.name} Materials` : 'Subject';
+        } catch (error) {
+            console.error('Error fetching subjects:', error);
+            document.getElementById('subjectsList').innerHTML = '<li class="list-group-item">Error loading subjects</li>';
+        }
+    }
+
+    async function fetchContent() {
+        const token = localStorage.getItem('token');
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/subject/${subjectId}/content`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!response.ok) {
+                throw new Error(`Failed to fetch content: ${response.statusText}`);
+            }
+            const data = await response.json();
+            console.log('Fetched content:', data);
+            if (!data.success) {
+                throw new Error(data.message || 'Failed to fetch content');
+            }
+            weeks = { materials: [], tasks: [] };
+            if (data.weeks && Array.isArray(data.weeks)) {
+                data.weeks.forEach(week => {
+                    if (week.materials && Array.isArray(week.materials)) {
+                        week.materials.forEach(mat => weeks.materials.push({ weekNumber: week.weekNumber, ...mat }));
+                    }
+                    if (week.tasks && Array.isArray(week.tasks)) {
+                        week.tasks.forEach(task => weeks.tasks.push({ weekNumber: week.weekNumber, ...task }));
+                    }
+                });
+            }
+            renderContent();
+            const groupSelect = document.getElementById('groupSelect');
+            groupSelect.innerHTML = userOrganizations.map(org => `<option value="${org.id}">${org.name}</option>`).join('');
+            fetchTasks();
+        } catch (error) {
+            console.error('Error fetching content:', error);
+            weeks = { materials: [], tasks: [] };
+            for (let i = 1; i <= 10; i++) {
+                weeks.materials.push({ weekNumber: i });
+                weeks.tasks.push({ weekNumber: i });
+            }
+            renderContent();
+        }
+    }
+
+    function renderContent() {
+        try {
+            const materialsContainer = document.getElementById('materialsWeeks');
+            const tasksContainer = document.getElementById('tasksWeeks');
+            if (!materialsContainer || !tasksContainer) {
+                throw new Error('Materials or tasks container not found in DOM');
+            }
+            materialsContainer.innerHTML = '';
+            tasksContainer.innerHTML = '';
+
+            const materialsByWeek = weeks.materials.reduce((acc, mat) => {
+                acc[mat.weekNumber] = acc[mat.weekNumber] || [];
+                acc[mat.weekNumber].push(mat);
+                return acc;
+            }, {});
+            const tasksByWeek = weeks.tasks.reduce((acc, task) => {
+                acc[task.weekNumber] = acc[task.weekNumber] || [];
+                acc[task.weekNumber].push(task);
+                return acc;
+            }, {});
+
+            for (let i = 1; i <= Math.max(10, ...Object.keys(materialsByWeek).map(Number), ...Object.keys(tasksByWeek).map(Number)); i++) {
+                const matWeekDiv = document.createElement('div');
+                matWeekDiv.className = 'week-container';
+                matWeekDiv.setAttribute('data-week', i);
+                matWeekDiv.setAttribute('data-type', 'materials');
+                matWeekDiv.innerHTML = `
+                    <div class="week-header">
+                        <div class="week-title">Week ${i}</div>
+                        <button class="week-toggle" data-week="${i}" data-type="materials">Toggle</button>
+                        <button class="add-btn" onclick="showAddContentModal(${i}, 'materials')">+</button>
+                    </div>
+                    <div class="week-content">
+                        ${materialsByWeek[i]?.map(mat => `
+                            <div class="material-input">
+                                <p><strong>${mat.type}</strong>: ${mat.title}</p>
+                                ${mat.content ? `<p>${mat.content}</p>` : ''}
+                                ${mat.fileUrl ? `<a href="${API_BASE_URL}${mat.fileUrl}" download="${mat.title}.${mat.fileUrl.split('.').pop()}">Download File</a>` : mat.pendingFile ? `<span>Pending: ${mat.pendingFile.name}</span>` : ''}
+                            </div>
+                        `).join('') || '<p>No materials yet</p>'}
+                    </div>
+                `;
+                materialsContainer.appendChild(matWeekDiv);
+
+                const taskWeekDiv = document.createElement('div');
+                taskWeekDiv.className = 'week-container';
+                taskWeekDiv.setAttribute('data-week', i);
+                taskWeekDiv.setAttribute('data-type', 'tasks');
+                taskWeekDiv.innerHTML = `
+                    <div class="week-header">
+                        <div class="week-title">Week ${i}</div>
+                        <button class="week-toggle" data-week="${i}" data-type="tasks">Toggle</button>
+                        <button class="add-btn" onclick="showAddContentModal(${i}, 'tasks')">+</button>
+                    </div>
+                    <div class="week-content">
+                        ${tasksByWeek[i]?.map(task => `
+                            <div class="material-input">
+                                <p><strong>${task.type}</strong>: ${task.title} (Group: ${userOrganizations.find(org => org.id === task.organizationId)?.name})</p>
+                                ${task.dueDate ? `<p>Due: ${new Date(task.dueDate).toLocaleString()}</p>` : ''}
+                                ${task.content ? `<p>${task.content}</p>` : ''}
+                                ${task.fileUrl ? `<a href="${API_BASE_URL}${task.fileUrl}" download="${task.title}.${task.fileUrl.split('.').pop()}">Download File</a>` : task.pendingFile ? `<span>Pending: ${task.pendingFile.name}</span>` : ''}
+                            </div>
+                        `).join('') || '<p>No tasks yet</p>'}
+                    </div>
+                `;
+                tasksContainer.appendChild(taskWeekDiv);
+            }
+            attachToggleListeners();
+        } catch (error) {
+            console.error('Error rendering content:', error);
+        }
+    }
+
+    function attachToggleListeners() {
+        document.querySelectorAll('.week-toggle').forEach(button => {
+            button.removeEventListener('click', toggleHandler);
+            button.addEventListener('click', toggleHandler);
+        });
+    }
+
+    function toggleHandler() {
+        const weekNum = this.getAttribute('data-week');
+        const type = this.getAttribute('data-type');
+        console.log(`Toggling Week ${weekNum} in ${type}`);
+        toggleWeek(weekNum, type);
+    }
+
+    function showTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('data-tab') === tabId) link.classList.add('active');
+        });
+        if (tabId === 'tasks') fetchTasks();
+    }
+
+    function toggleWeek(weekNum, type) {
+        const content = document.querySelector(`.week-container[data-week="${weekNum}"][data-type="${type}"] .week-content`);
+        if (content) {
+            content.classList.toggle('active');
+        } else {
+            console.error(`No content found for Week ${weekNum} in ${type}`);
+        }
+    }
+
+    function addWeek(type) {
+        const maxWeek = Math.max(...Object.keys(weeks[type].reduce((acc, item) => {
+            acc[item.weekNumber] = true;
+            return acc;
+        }, {})).map(Number), 10);
+        const weekNum = maxWeek + 1;
+        weeks[type].push({ weekNumber: weekNum });
+        renderContent();
+    }
+
+    function showAddContentModal(weekNum, type) {
+        currentWeekNum = weekNum;
+        currentType = type;
+        const modal = document.getElementById('addContentModal');
+        const typeSelect = document.getElementById('modalType');
+        const orgGroup = document.getElementById('modalOrgGroup');
+        const dueGroup = document.getElementById('modalDueGroup');
+        typeSelect.innerHTML = type === 'materials' ? `
+            <option value="syllabus">Syllabus</option>
+            <option value="lecture">Lecture</option>
+            <option value="notes">Notes</option>
+        ` : `
+            <option value="assignment">Assignment</option>
+            <option value="exam">Exam</option>
+            <option value="task">Task</option>
+        `;
+        orgGroup.style.display = type === 'tasks' ? 'block' : 'none';
+        dueGroup.style.display = type === 'tasks' ? 'block' : 'none';
+        if (type === 'tasks') {
+            document.getElementById('modalOrg').innerHTML = userOrganizations.map(org => `<option value="${org.id}">${org.name}</option>`).join('');
+        }
+        document.getElementById('modalTitle').value = '';
+        document.getElementById('modalContent').value = '';
+        document.getElementById('modalFile').value = '';
+        modal.classList.add('active');
+    }
+
+    function closeModal() {
+        document.getElementById('addContentModal').classList.remove('active');
+    }
+
+    function addContentFromModal() {
+        const type = document.getElementById('modalType').value;
+        const title = document.getElementById('modalTitle').value;
+        const content = document.getElementById('modalContent').value;
+        const file = document.getElementById('modalFile').files[0];
+        const organizationId = currentType === 'tasks' ? document.getElementById('modalOrg').value : null;
+        const dueDate = currentType === 'tasks' ? document.getElementById('modalDue').value : null;
+
+        if (!title) {
+            alert('Title is required');
+            return;
+        }
+
+        const newContent = { weekNumber: currentWeekNum, type, title, content };
+        if (currentType === 'tasks') {
+            newContent.organizationId = organizationId;
+            newContent.dueDate = dueDate || null;
+        }
+        if (file) {
+            newContent.pendingFile = file;
+            newContent.fileUrl = `${currentWeekNum}_${currentType}_${title}`;
+            pendingFiles.push({ file, name: `${currentWeekNum}_${currentType}_${title}` });
+        }
+        weeks[currentType].push(newContent);
+        renderContent();
+        alert(`Added ${type} to Week ${currentWeekNum}`);
+        closeModal();
+    }
+
+    async function saveContent() {
+        const token = localStorage.getItem('token');
+        const formData = new FormData();
+        const updatedWeeks = [];
+        const allWeeks = [...new Set([...weeks.materials, ...weeks.tasks].map(w => w.weekNumber))];
+
+        console.log('Saving content...');
+        allWeeks.forEach(weekNum => {
+            const weekMaterials = weeks.materials.filter(m => m.weekNumber === weekNum).map(m => ({
+                type: m.type,
+                title: m.title,
+                content: m.content,
+                fileUrl: m.fileUrl && m.fileUrl.startsWith('/uploads') ? m.fileUrl : null
+            }));
+            const weekTasks = weeks.tasks.filter(t => t.weekNumber === weekNum).map(t => ({
+                organizationId: t.organizationId,
+                type: t.type,
+                title: t.title,
+                dueDate: t.dueDate || null,
+                content: t.content,
+                fileUrl: t.fileUrl && t.fileUrl.startsWith('/uploads') ? t.fileUrl : null
+            }));
+            updatedWeeks.push({ weekNumber: weekNum, materials: weekMaterials, tasks: weekTasks });
+        });
+
+        console.log('Weeks to save:', updatedWeeks);
+        pendingFiles.forEach(fileObj => {
+            formData.append('files', fileObj.file, fileObj.name);
+        });
+        formData.append('weeksData', JSON.stringify(updatedWeeks));
+        console.log('FormData:', Array.from(formData.entries()));
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/subject/${subjectId}/content`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` },
+                body: formData
+            });
+            const data = await response.json();
+            console.log('Server response:', data);
+            if (data.success) {
+                alert('Content saved successfully!');
+                pendingFiles = [];
+                try {
+                    await fetchContent();
+                } catch (postSaveError) {
+                    console.error('Error fetching content after save:', postSaveError);
+                    alert('Content saved, but failed to refresh page: ' + postSaveError.message);
+                }
+            } else {
+                alert('Failed to save content: ' + (data.message || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Error saving content:', error);
+            if (error.message.includes('token')) {
+                alert('Session expired. Please log in again.');
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
+            } else {
+                alert('Error saving content: ' + error.message);
+            }
+        }
+    }
+
+    function fetchTasks() {
+        const groupId = document.getElementById('groupSelect').value;
+        const filteredTasks = weeks.tasks.filter(task => task.organizationId === groupId);
+        const tasksByWeek = filteredTasks.reduce((acc, task) => {
+            acc[task.weekNumber] = acc[task.weekNumber] || [];
+            acc[task.weekNumber].push(task);
+            return acc;
+        }, {});
+        const tasksContainer = document.getElementById('tasksWeeks');
+        tasksContainer.innerHTML = '';
+        for (let i = 1; i <= Math.max(10, ...Object.keys(tasksByWeek).map(Number)); i++) {
+            const weekDiv = document.createElement('div');
+            weekDiv.className = 'week-container';
+            weekDiv.setAttribute('data-week', i);
+            weekDiv.setAttribute('data-type', 'tasks');
+            weekDiv.innerHTML = `
+                <div class="week-header">
+                    <div class="week-title">Week ${i}</div>
+                    <button class="week-toggle" data-week="${i}" data-type="tasks">Toggle</button>
+                    <button class="add-btn" onclick="showAddContentModal(${i}, 'tasks')">+</button>
+                </div>
+                <div class="week-content">
+                    ${tasksByWeek[i]?.map(task => `
+                        <div class="material-input">
+                            <p><strong>${task.type}</strong>: ${task.title} (Group: ${userOrganizations.find(org => org.id === task.organizationId)?.name})</p>
+                            ${task.dueDate ? `<p>Due: ${new Date(task.dueDate).toLocaleString()}</p>` : ''}
+                            ${task.content ? `<p>${task.content}</p>` : ''}
+                            ${task.fileUrl ? `<a href="${API_BASE_URL}${task.fileUrl}" download="${task.title}.${task.fileUrl.split('.').pop()}">Download File</a>` : task.pendingFile ? `<span>Pending: ${task.pendingFile.name}</span>` : ''}
+                        </div>
+                    `).join('') || '<p>No tasks yet</p>'}
+                </div>
+            `;
+            tasksContainer.appendChild(weekDiv);
+        }
+        attachToggleListeners();
+    }
+
+    function jwt_decode(token) {
+        try {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+            return JSON.parse(jsonPayload);
+        } catch (error) {
+            console.error('Error decoding JWT:', error);
+            return {};
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', checkAuthAndFetchUser);
+
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => showTab(link.getAttribute('data-tab')));
+    });
+</script>
+</body>
+</html>
